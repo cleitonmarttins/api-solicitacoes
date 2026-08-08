@@ -1,0 +1,90 @@
+services:
+
+  postgres:
+    image: postgres:16
+    container_name: api-solicitacoes-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: bd-solicitacoes
+      POSTGRES_USER: coti
+      POSTGRES_PASSWORD: coti
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - api-solicitacoes-network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: api-solicitacoes-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: coti@email.com
+      PGADMIN_DEFAULT_PASSWORD: Coti@2026
+    ports:
+      - "5052:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - api-solicitacoes-network
+
+  mongodb:
+    image: mongo:latest
+    container_name: api-solicitacoes-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: coti
+      MONGO_INITDB_ROOT_PASSWORD: coti
+      MONGO_INITDB_DATABASE: bd-solicitacoes
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - api-solicitacoes-network
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: api-solicitacoes-mongo-express
+    restart: unless-stopped
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: coti
+      ME_CONFIG_MONGODB_ADMINPASSWORD: coti
+      ME_CONFIG_MONGODB_URL: mongodb://coti:coti@mongodb:27017/?authSource=admin
+      ME_CONFIG_BASICAUTH_ENABLED: "false"
+    ports:
+      - "5054:8081"
+    depends_on:
+      - mongodb
+    networks:
+      - api-solicitacoes-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: api-solicitacoes-rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: coti
+      RABBITMQ_DEFAULT_PASS: coti
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - api-solicitacoes-network
+
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+  mongodb_data:
+  rabbitmq_data:
+
+
+networks:
+  api-solicitacoes-network:
+    driver: bridge
