@@ -1,5 +1,22 @@
 services:
 
+  api-solicitacoes:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api-solicitacoes-springboot
+    restart: always
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bd-solicitacoes
+      SPRING_MONGODB_URL: mongodb://coti:coti@mongodb:27017/bd-solicitacoes?authSource=admin
+      SPRING_RABBIMQ_HOST: rabbitmq
+    networks:
+      - api-solicitacoes-network
+    depends_on:
+      - postgres
+
   postgres:
     image: postgres:16
     container_name: api-solicitacoes-postgres
