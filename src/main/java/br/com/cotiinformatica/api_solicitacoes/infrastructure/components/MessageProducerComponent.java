@@ -13,6 +13,11 @@ public class MessageProducerComponent {
     private final Queue queue;
 
     public void sendMessage(String message) throws Exception {
-        rabbitTemplate.convertAndSend(queue.getName(), message);
+        try {
+            rabbitTemplate.convertAndSend(queue.getName(), message);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 }
