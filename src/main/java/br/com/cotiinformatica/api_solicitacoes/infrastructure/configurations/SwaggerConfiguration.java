@@ -14,7 +14,7 @@ public class SwaggerConfiguration {
     OpenAPI openAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("API de Solicitações")
+                        .title("API de Solicitações 2.0")
                         .description("API REST para gerenciamento de solicitações.")
                         .version("1.0")
                         .contact(new Contact()
